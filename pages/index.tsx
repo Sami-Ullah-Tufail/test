@@ -2,13 +2,26 @@ import { useEffect, useState } from 'react'
 import Page from '@/components/page'
 import Section from '@/components/section'
 
+
 const InstallPWAButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isSafari, setIsSafari] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
+    // Detect iOS and Safari
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const ios = /iphone|ipad|ipod/.test(userAgent);
+    const safari = ios && !/chrome|crios|fxios/.test(userAgent);
+
+    setIsIOS(ios);
+    setIsSafari(safari);
+    setIsInstalled((window.navigator as any).standalone); // Checks if PWA is already installed on iOS
+
     const handleBeforeInstallPrompt = (event: any) => {
-      event.preventDefault(); // Prevent default prompt
-      setDeferredPrompt(event); // Store the event for later use
+      event.preventDefault(); // Prevent auto-showing the prompt
+      setDeferredPrompt(event); // Store the prompt for later
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -19,6 +32,16 @@ const InstallPWAButton = () => {
   }, []);
 
   const handleInstallClick = () => {
+    if (isInstalled) {
+      alert("This app is already installed on your device.");
+      return;
+    }
+
+    if (isSafari) {
+      alert('To install this app on your iPhone, tap the "Share" button, then "Add to Home Screen".');
+      return;
+    }
+
     if (deferredPrompt) {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then((choiceResult: any) => {
@@ -27,7 +50,7 @@ const InstallPWAButton = () => {
         } else {
           console.log("User dismissed the PWA installation");
         }
-        setDeferredPrompt(null); // Reset the prompt after use
+        setDeferredPrompt(null); // Reset the prompt
       });
     } else {
       alert("PWA installation is not supported on this browser.");
@@ -37,12 +60,14 @@ const InstallPWAButton = () => {
   return (
     <button
       onClick={handleInstallClick}
-      className='mt-4 px-4 py-2 bg-zinc-800 dark:bg-zinc-200 text-zinc-100 dark:text-zinc-800 rounded-md font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-colors'
+      className="mt-4 px-4 py-2 bg-zinc-800 dark:bg-zinc-200 text-zinc-100 dark:text-zinc-800 rounded-md font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-colors"
     >
       Install App
     </button>
   );
 };
+
+
 
 const Index = () => (
 	<Page>
