@@ -53,7 +53,7 @@ const Index = () => (
 
 			<div className='mt-2'>
 				<p className='text-zinc-600 dark:text-zinc-400'>
-					Stress affects everyone, and it's a growing concern worldwide. In a recent
+					Stress affects everyone, and it&apos;s a growing concern worldwide. In a recent
 					global survey, researchers found that over{' '}
 					<span className='font-medium text-zinc-900 dark:text-zinc-50'>
 						75% of adults
