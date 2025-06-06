@@ -1,8 +1,8 @@
-import Page from '@/components/page'
+
 import Section from '@/components/section'
 
 const Recipes = () => (
-	<Page>
+
 		<Section>
 			<h2 className='text-xl font-semibold'>Ingredients</h2>
 
@@ -12,8 +12,8 @@ const Recipes = () => (
 					balanced and peaceful mindset.
 				</p>
 			</div>
-		</Section>s
-	</Page>
+		</Section>
+
 )
 
 export default Recipes
