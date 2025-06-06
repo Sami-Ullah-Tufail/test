@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import Section from '@/components/section'
 
-import elearningButton from '../../public/KnopE-learningRood.svg';
-import lesstressIcon from '../../public/Lesstress_icon.png';
-import measurementsButton from '../../public/KnopMeasurementsGroen.svg';
-import practicalInfoButton from '../../public/KnopPraktischeInfoBlauw.svg';
+import elearningButton from '../public/KnopE-learningRood.svg';
+import lesstressIcon from '../public/Lesstress_icon.png';
+import measurementsButton from '../public/KnopMeasurementsGroen.svg';
+import practicalInfoButton from '../public/KnopPraktischeInfoBlauw.svg';
 import Image from 'next/image';
 
 function getPlatformSpecificUrl(platform: 'ios' | 'android', type: 'measurements' | 'elearning') {
