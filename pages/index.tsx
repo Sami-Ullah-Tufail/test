@@ -1,8 +1,25 @@
 import { useEffect, useState } from 'react'
-import Page from '@/components/page'
 import Section from '@/components/section'
 
+import elearningButton from '../../public/KnopE-learningRood.svg';
+import lesstressIcon from '../../public/Lesstress_icon.png';
+import measurementsButton from '../../public/KnopMeasurementsGroen.svg';
+import practicalInfoButton from '../../public/KnopPraktischeInfoBlauw.svg';
+import Image from 'next/image';
 
+function getPlatformSpecificUrl(platform: 'ios' | 'android', type: 'measurements' | 'elearning') {
+  const urls = {
+    measurements: {
+      ios: 'https://apps.apple.com/fi/app/kubios-hrv-daily-readiness/id1463040412',
+      android: 'https://play.google.com/store/apps/details?id=com.kubioshrvapp',
+    },
+    elearning: {
+      ios: 'https://apps.apple.com/us/app/gnowbe-training-onboarding/id1104428352',
+      android: 'https://play.google.com/store/apps/details?id=com.gnowbe.app',
+    },
+  };
+  return urls[type][platform];
+}
 const InstallPWAButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
@@ -69,49 +86,80 @@ const InstallPWAButton = () => {
 
 
 
-const Index = () => (
-	<Page>
-		<Section>
-			<h2 className='text-xl font-semibold text-zinc-800 dark:text-zinc-200'>
-				We grow a lot of rice.
-			</h2>
+const Index = () => {
+  const handleButtonClick = (type: 'measurements' | 'elearning' | 'info') => {
+    if (type === 'info') {
+      window.location.href = 'https://lesstress.biz/praktische-informatie-lesstress-app/';
+      return;
+    }
 
-			<div className='mt-2'>
-				<p className='text-zinc-600 dark:text-zinc-400'>
-					Stress affects everyone, and it&apos;s a growing concern worldwide. In a recent
-					global survey, researchers found that over{' '}
-					<span className='font-medium text-zinc-900 dark:text-zinc-50'>
-						75% of adults
-					</span>{' '}
-					experience moderate to high levels of stress on a regular basis.
-				</p>
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const platform = isIOS ? 'ios' : 'android';
+    const url = getPlatformSpecificUrl(platform, type);
+    window.location.href = url;
+  };
 
-				<br />
+  return (
+    <div>
+        <div className="absolute top-0 left-0 w-full bg-transparent">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex justify-center">
+            <InstallPWAButton />
+          </div>
+        </div>
+      <div className="flex min-h-[100svh] flex-col items-center justify-start p-[4svh] overflow-hidden mt-8">
+        <div className="w-full max-w-[90vw] md:max-w-[80vw] flex flex-col items-center gap-[8svh]">
+          {/* Logo */}
+          <div className="flex justify-center items-center gap-[3svw]">
+            <h1 className="text-[min(10vw,3rem)] text-[#8CC63F] poppins-light">Lesstress</h1>
+            <Image
+              src={lesstressIcon}
+              alt="Lesstress"
+              className="w-[min(10vw,3.5rem)] h-[min(10vw,3.5rem)] object-contain"
+            />
+          </div>
 
-				<p className='text-sm text-zinc-600 dark:text-zinc-400'>
-					<a
-						href='https://github.com/mvllow/next-pwa-template'
-						className='underline'
-					>
-						Source
-					</a>
-				</p>
-			</div>
-		</Section>
-		<Section>
-			<h2 className='text-xl font-semibold text-zinc-800 dark:text-zinc-200'>
-				Download Our App
-			</h2>
+          {/* Buttons */}
+          <div className="flex flex-col gap-[4svh] w-full max-w-[65vw]">
+            <button
+              onClick={() => handleButtonClick('measurements')}
+              className="w-full h-[20svh] transition-transform hover:scale-[1.02]"
+            >
+              <Image
+                src={measurementsButton}
+                alt="Measurements"
+                className="w-full h-full object-contain"
+              />
+            </button>
 
-			<div className='mt-2'>
-				<p className='text-zinc-600 dark:text-zinc-400'>
-					Take stress management with you wherever you go. Install our app on your mobile device for easy access.
-				</p>
+            <button
+              onClick={() => handleButtonClick('elearning')}
+              className="w-full h-[20svh] transition-transform hover:scale-[1.02]"
+            >
+              <Image
+                src={elearningButton}
+                alt="E-learning"
+                className="w-full h-full object-contain"
+              />
+            </button>
 
-				<InstallPWAButton />
-			</div>
-		</Section>
-	</Page>
-)
+            <button
+              onClick={() => handleButtonClick('info')}
+              className="w-full h-[20svh] transition-transform hover:scale-[1.02]"
+            >
+              <Image
+                src={practicalInfoButton}
+                alt="Practical Info"
+                className="w-full h-full object-contain"
+              />
+            </button>
+          </div>
+        </div>
 
-export default Index
+
+      </div>
+    </div>
+  );
+};
+
+export default Index;
