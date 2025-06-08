@@ -35,12 +35,11 @@ const InstallPWAButton = () => {
     const ios = /iphone|ipad|ipod/.test(userAgent);
     const safari = ios && !/chrome|crios|fxios/.test(userAgent);
     const firefox = userAgent.indexOf('firefox') > -1;
-    const mobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+  
 
     setIsIOS(ios);
     setIsSafari(safari);
     setIsFirefox(firefox);
-    setIsMobile(mobile);
     setIsInstalled((window.navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches);
 
     const handleBeforeInstallPrompt = (event: any) => {
@@ -66,7 +65,7 @@ const InstallPWAButton = () => {
       return;
     }
 
-    if (isFirefox && isMobile) {
+    if (isFirefox ) {
       alert('To install this app on Firefox Mobile:\n1. Tap the three dots menu (⋮)\n2. Tap "Install"\n3. Follow the prompts to add to your home screen');
       return;
     }
@@ -82,12 +81,8 @@ const InstallPWAButton = () => {
         setDeferredPrompt(null);
       });
     } else {
-      if (isFirefox) {
-        alert('To install this app on Firefox Desktop:\n1. Click the three dots menu (⋮)\n2. Click "Install Lesstress"\n3. Follow the prompts to install');
-      } else {
         alert("To install this app:\n1. Look for the install icon (＋) in your browser's address bar\n2. Click it and follow the prompts\n\nIf you don't see the install icon, you may need to use a supported browser like Chrome or Edge.");
       }
-    }
   };
 
   return (
