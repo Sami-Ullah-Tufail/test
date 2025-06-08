@@ -16,37 +16,8 @@ export default function Document() {
 					media='(prefers-color-scheme: dark)'
 				/>
 				<meta name='theme-color' content='#f4f4f5' />
-				
-				{/* PWA Icons */}
 				<link rel='apple-touch-icon' href='/images/icon-maskable-512.png' />
 				<link rel='manifest' href='/manifest.json' />
-				
-				{/* iOS Splash Screen */}
-				<link
-					href='/SAVER.svg'
-					media='(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
-					rel='apple-touch-startup-image'
-				/>
-				<link
-					href='/SAVER.svg'
-					media='(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)'
-					rel='apple-touch-startup-image'
-				/>
-				<link
-					href='/SAVER.svg'
-					media='(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)'
-					rel='apple-touch-startup-image'
-				/>
-				<link
-					href='/SAVER.svg'
-					media='(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)'
-					rel='apple-touch-startup-image'
-				/>
-				
-				{/* PWA Configuration */}
-				<meta name='apple-mobile-web-app-capable' content='yes' />
-				<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />
-				<meta name='apple-mobile-web-app-title' content='Lesstress' />
 			</Head>
 			<body>
 				<Main />

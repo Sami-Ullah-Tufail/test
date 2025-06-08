@@ -20,28 +20,32 @@ function getPlatformSpecificUrl(platform: 'ios' | 'android', type: 'measurements
   };
   return urls[type][platform];
 }
+
 const InstallPWAButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
   const [isFirefox, setIsFirefox] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Detect browsers and platforms
+    // Detect browser and device type
     const userAgent = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(userAgent);
     const safari = ios && !/chrome|crios|fxios/.test(userAgent);
     const firefox = userAgent.indexOf('firefox') > -1;
+    const mobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
 
     setIsIOS(ios);
     setIsSafari(safari);
     setIsFirefox(firefox);
-    setIsInstalled((window.navigator as any).standalone || (window.matchMedia('(display-mode: standalone)').matches));
+    setIsMobile(mobile);
+    setIsInstalled((window.navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches);
 
     const handleBeforeInstallPrompt = (event: any) => {
-      event.preventDefault(); // Prevent auto-showing the prompt
-      setDeferredPrompt(event); // Store the prompt for later
+      event.preventDefault();
+      setDeferredPrompt(event);
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -58,12 +62,12 @@ const InstallPWAButton = () => {
     }
 
     if (isSafari) {
-      alert('To install this app on your iPhone, tap the "Share" button, then "Add to Home Screen".');
+      alert('To install this app on your iPhone:\n1. Tap the "Share" button at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right');
       return;
     }
 
-    if (isFirefox) {
-      alert('To install in Firefox:\n1. Look for the "+" icon in the address bar\n2. On Firefox Mobile:\n   - Tap the three dots menu\n   - Select "Install"\n3. If you don\'t see the install option:\n   - Visit this site again in 5 minutes\n ');
+    if (isFirefox && isMobile) {
+      alert('To install this app on Firefox Mobile:\n1. Tap the three dots menu (⋮)\n2. Tap "Install"\n3. Follow the prompts to add to your home screen');
       return;
     }
 
@@ -75,10 +79,14 @@ const InstallPWAButton = () => {
         } else {
           console.log("User dismissed the PWA installation");
         }
-        setDeferredPrompt(null); // Reset the prompt
+        setDeferredPrompt(null);
       });
     } else {
-      alert("Installation is not available at the moment. Make sure you're using a supported browser and the site is served over HTTPS.");
+      if (isFirefox) {
+        alert('To install this app on Firefox Desktop:\n1. Click the three dots menu (⋮)\n2. Click "Install Lesstress"\n3. Follow the prompts to install');
+      } else {
+        alert("To install this app:\n1. Look for the install icon (＋) in your browser's address bar\n2. Click it and follow the prompts\n\nIf you don't see the install icon, you may need to use a supported browser like Chrome or Edge.");
+      }
     }
   };
 
@@ -91,8 +99,6 @@ const InstallPWAButton = () => {
     </button>
   );
 };
-
-
 
 const Index = () => {
   const handleButtonClick = (type: 'measurements' | 'elearning' | 'info') => {
