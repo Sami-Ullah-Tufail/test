@@ -20,31 +20,30 @@ function getPlatformSpecificUrl(platform: 'ios' | 'android', type: 'measurements
   };
   return urls[type][platform];
 }
-
 const InstallPWAButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
-  const [isFirefox, setIsFirefox] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Detect browser and device type
+    // Add logging for debugging
+    console.log('Browser:', navigator.userAgent);
+    console.log('PWA Support:', 'BeforeInstallPromptEvent' in window);
+
+    // Detect iOS and Safari
     const userAgent = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(userAgent);
     const safari = ios && !/chrome|crios|fxios/.test(userAgent);
-    const firefox = userAgent.indexOf('firefox') > -1;
-  
 
     setIsIOS(ios);
     setIsSafari(safari);
-    setIsFirefox(firefox);
-    setIsInstalled((window.navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches);
+    setIsInstalled((window.navigator as any).standalone); // Checks if PWA is already installed on iOS
 
     const handleBeforeInstallPrompt = (event: any) => {
-      event.preventDefault();
-      setDeferredPrompt(event);
+      event.preventDefault(); // Prevent auto-showing the prompt
+      console.log('beforeinstallprompt event fired');
+      setDeferredPrompt(event); // Store the prompt for later
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -61,12 +60,7 @@ const InstallPWAButton = () => {
     }
 
     if (isSafari) {
-      alert('To install this app on your iPhone:\n1. Tap the "Share" button at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right');
-      return;
-    }
-
-    if (isFirefox ) {
-      alert('To install this app on Firefox Mobile:\n1. Tap the three dots menu (⋮)\n2. Tap "Install"\n3. Follow the prompts to add to your home screen');
+      alert('To install this app on your iPhone, tap the "Share" button, then "Add to Home Screen".');
       return;
     }
 
@@ -78,11 +72,17 @@ const InstallPWAButton = () => {
         } else {
           console.log("User dismissed the PWA installation");
         }
-        setDeferredPrompt(null);
+        setDeferredPrompt(null); // Reset the prompt
       });
     } else {
-        alert("To install this app:\n1. Look for the install icon (＋) in your browser's address bar\n2. Click it and follow the prompts\n\nIf you don't see the install icon, you may need to use a supported browser like Chrome or Edge.");
+      // Check if app is already installed via display-mode
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        alert("This app is already installed on your device.");
+      } else {
+        console.log('PWA installation prompt not available');
+        alert("To install, please use Chrome or Safari browser.");
       }
+    }
   };
 
   return (
