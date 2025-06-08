@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes pulse {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+    .loading-dot {
+      animation: pulse 1.5s infinite;
+    }
+    .dot2 { animation-delay: 0.5s; }
+    .dot3 { animation-delay: 1s; }
+  </style>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#f4f4f5"/>
+  
+  <!-- Lesstress Text -->
+  <text x="512" y="450" font-family="Arial, sans-serif" font-size="72" font-weight="bold" 
+        fill="#8CC63F" text-anchor="middle">Lesstress</text>
+  
+  <!-- Loading dots -->
+  <circle class="loading-dot dot1" cx="462" cy="550" r="10" fill="#8CC63F"/>
+  <circle class="loading-dot dot2" cx="512" cy="550" r="10" fill="#8CC63F"/>
+  <circle class="loading-dot dot3" cx="562" cy="550" r="10" fill="#8CC63F"/>
+</svg> 

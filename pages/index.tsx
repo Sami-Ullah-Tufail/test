@@ -24,17 +24,20 @@ const InstallPWAButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
+  const [isFirefox, setIsFirefox] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // Detect iOS and Safari
+    // Detect browsers and platforms
     const userAgent = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(userAgent);
     const safari = ios && !/chrome|crios|fxios/.test(userAgent);
+    const firefox = userAgent.indexOf('firefox') > -1;
 
     setIsIOS(ios);
     setIsSafari(safari);
-    setIsInstalled((window.navigator as any).standalone); // Checks if PWA is already installed on iOS
+    setIsFirefox(firefox);
+    setIsInstalled((window.navigator as any).standalone || (window.matchMedia('(display-mode: standalone)').matches));
 
     const handleBeforeInstallPrompt = (event: any) => {
       event.preventDefault(); // Prevent auto-showing the prompt
@@ -59,6 +62,11 @@ const InstallPWAButton = () => {
       return;
     }
 
+    if (isFirefox) {
+      alert('To install in Firefox:\n1. Look for the "+" icon in the address bar\n2. On Firefox Mobile:\n   - Tap the three dots menu\n   - Select "Install"\n3. If you don\'t see the install option:\n   - Visit this site again in 5 minutes\n ');
+      return;
+    }
+
     if (deferredPrompt) {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then((choiceResult: any) => {
@@ -70,7 +78,7 @@ const InstallPWAButton = () => {
         setDeferredPrompt(null); // Reset the prompt
       });
     } else {
-      alert("PWA installation is not supported on this browser.");
+      alert("Installation is not available at the moment. Make sure you're using a supported browser and the site is served over HTTPS.");
     }
   };
 
