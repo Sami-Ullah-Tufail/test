@@ -27,6 +27,10 @@ const InstallPWAButton = () => {
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
+    // Add logging for debugging
+    console.log('Browser:', navigator.userAgent);
+    console.log('PWA Support:', 'BeforeInstallPromptEvent' in window);
+
     // Detect iOS and Safari
     const userAgent = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(userAgent);
@@ -38,6 +42,7 @@ const InstallPWAButton = () => {
 
     const handleBeforeInstallPrompt = (event: any) => {
       event.preventDefault(); // Prevent auto-showing the prompt
+      console.log('beforeinstallprompt event fired');
       setDeferredPrompt(event); // Store the prompt for later
     };
 
@@ -70,7 +75,13 @@ const InstallPWAButton = () => {
         setDeferredPrompt(null); // Reset the prompt
       });
     } else {
-      alert("PWA installation is not supported on this browser.");
+      // Check if app is already installed via display-mode
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        alert("This app is already installed on your device.");
+      } else {
+        console.log('PWA installation prompt not available');
+        alert("To install, please use Chrome or Safari browser.");
+      }
     }
   };
 
@@ -83,8 +94,6 @@ const InstallPWAButton = () => {
     </button>
   );
 };
-
-
 
 const Index = () => {
   const handleButtonClick = (type: 'measurements' | 'elearning' | 'info') => {
