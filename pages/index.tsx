@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Section from '@/components/section'
+import { detectIncognito } from "detectincognitojs";
 
 import elearningButton from '../public/KnopE-learningRood.svg';
 import lesstressIcon from '../public/Lesstress_icon.png';
@@ -25,6 +26,9 @@ const InstallPWAButton = () => {
   const [isIOS, setIsIOS] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [isIncognito, setIsIncognito] = useState(false);
+  const [browserName, setBrowserName] = useState<string>('');
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // Add logging for debugging
@@ -35,15 +39,26 @@ const InstallPWAButton = () => {
     const userAgent = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(userAgent);
     const safari = ios && !/chrome|crios|fxios/.test(userAgent);
+    const mobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+
+    // Use detectIncognito for better incognito detection
+    detectIncognito().then((result) => {
+      console.log('Browser:', result.browserName, 'Incognito:', result.isPrivate);
+      setIsIncognito(result.isPrivate);
+      setBrowserName(result.browserName);
+    }).catch(error => {
+      console.error('Error detecting incognito mode:', error);
+    });
 
     setIsIOS(ios);
     setIsSafari(safari);
-    setIsInstalled((window.navigator as any).standalone); // Checks if PWA is already installed on iOS
+    setIsMobile(mobile);
+    setIsInstalled((window.navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches);
 
     const handleBeforeInstallPrompt = (event: any) => {
-      event.preventDefault(); // Prevent auto-showing the prompt
+      event.preventDefault();
       console.log('beforeinstallprompt event fired');
-      setDeferredPrompt(event); // Store the prompt for later
+      setDeferredPrompt(event);
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -54,13 +69,27 @@ const InstallPWAButton = () => {
   }, []);
 
   const handleInstallClick = () => {
+    if (isIncognito) {
+      alert(`Please use regular browsing mode in ${browserName} to install this app.`);
+      return;
+    }
+
     if (isInstalled) {
       alert("This app is already installed on your device.");
       return;
     }
 
-    if (isSafari) {
-      alert('To install this app on your iPhone, tap the "Share" button, then "Add to Home Screen".');
+    if (isIOS) {
+      alert('On iOS, tap the share icon (box with arrow) at the bottom of your browser, then select "Add to Home Screen" to install this app.');
+      return;
+    }
+
+    if (browserName.toLowerCase().includes('firefox')) {
+      if (isMobile) {
+        alert('On Firefox Mobile, tap the three dots menu (⋮) at the top right and select "Install" to add this app to your home screen.');
+      } else {
+        alert('On Firefox Desktop, click the "+" icon in the address bar to install this app.');
+      }
       return;
     }
 
@@ -72,15 +101,14 @@ const InstallPWAButton = () => {
         } else {
           console.log("User dismissed the PWA installation");
         }
-        setDeferredPrompt(null); // Reset the prompt
+        setDeferredPrompt(null);
       });
     } else {
-      // Check if app is already installed via display-mode
       if (window.matchMedia('(display-mode: standalone)').matches) {
         alert("This app is already installed on your device.");
       } else {
         console.log('PWA installation prompt not available');
-        alert("To install, please use Chrome or Safari browser.");
+        alert(`To install, please use a supported browser like Chrome or Edge in regular mode.`);
       }
     }
   };
