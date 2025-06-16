@@ -124,17 +124,6 @@ const InstallPWAButton = () => {
 };
 
 const Index = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading time to match splash screen
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleButtonClick = (type: 'measurements' | 'elearning' | 'info') => {
     if (type === 'info') {
       window.location.href = 'https://lesstress.biz/praktische-informatie-lesstress-app/';
@@ -148,28 +137,13 @@ const Index = () => {
     window.location.href = url;
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[100svh] items-center justify-center bg-zinc-50 dark:bg-zinc-900">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-[#8CC63F] mb-4">Lesstress</h1>
-          <div className="flex justify-center space-x-2">
-            <div className="w-3 h-3 bg-[#8CC63F] rounded-full animate-bounce"></div>
-            <div className="w-3 h-3 bg-[#8CC63F] rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-            <div className="w-3 h-3 bg-[#8CC63F] rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div>
-      <div className="absolute top-0 left-0 w-full bg-transparent">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-center">
-          <InstallPWAButton />
+        <div className="absolute top-0 left-0 w-full bg-transparent">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex justify-center">
+            <InstallPWAButton />
+          </div>
         </div>
-      </div>
       <div className="flex min-h-[100svh] flex-col items-center justify-start p-[4svh] overflow-hidden mt-8">
         <div className="w-full max-w-[90vw] md:max-w-[80vw] flex flex-col items-center gap-[8svh]">
           {/* Logo */}
@@ -179,7 +153,6 @@ const Index = () => {
               src={lesstressIcon}
               alt="Lesstress"
               className="w-[min(10vw,3.5rem)] h-[min(10vw,3.5rem)] object-contain"
-              priority
             />
           </div>
 
@@ -193,7 +166,6 @@ const Index = () => {
                 src={measurementsButton}
                 alt="Measurements"
                 className="w-full h-full object-contain"
-                priority
               />
             </button>
 
@@ -205,7 +177,6 @@ const Index = () => {
                 src={elearningButton}
                 alt="E-learning"
                 className="w-full h-full object-contain"
-                priority
               />
             </button>
 
@@ -217,11 +188,12 @@ const Index = () => {
                 src={practicalInfoButton}
                 alt="Practical Info"
                 className="w-full h-full object-contain"
-                priority
               />
             </button>
           </div>
         </div>
+
+
       </div>
     </div>
   );
