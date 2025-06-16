@@ -14,14 +14,14 @@
 			"sizes": "512x512"
 		},
 		{
-			"src": "/SAVER.svg",
-			"type": "image/svg+xml",
+			"src": "/images/android-launchericon-512-512.png",
+			"type": "image/png",
 			"sizes": "512x512",
 			"purpose": "maskable"
 		},
 		{
-			"src": "/SAVER.svg",
-			"type": "image/svg+xml",
+			"src": "/images/android-launchericon-512-512.png",
+			"type": "image/png",
 			"sizes": "512x512",
 			"purpose": "any"
 		}
@@ -32,5 +32,6 @@
 	"scope": "/",
 	"theme_color": "#18181b",
 	"background_color": "#f4f4f5",
-	"splash_pages": null
+	"splash_pages": null,
+	"prefer_related_applications": false
 }
