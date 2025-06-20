@@ -5,7 +5,7 @@ import { detectIncognito } from "detectincognitojs";
 import elearningButton from '../public/KnopE-learningRood.svg';
 import lesstressIcon from '../public/Lesstress_icon.png';
 import measurementsButton from '../public/KnopMeasurementsGroen.svg';
-import practicalInfoButton from '../public/KnopPraktischeInfoBlauw.svg';
+import practicalInfoButton from '../public/KnopPracticalInfoBlauw.png';
 import Image from 'next/image';
 
 function getPlatformSpecificUrl(platform: 'ios' | 'android', type: 'measurements' | 'elearning') {
@@ -147,12 +147,12 @@ const Index = () => {
       <div className="flex min-h-[100svh] flex-col items-center justify-start p-[4svh] overflow-hidden mt-8">
         <div className="w-full max-w-[90vw] md:max-w-[80vw] flex flex-col items-center gap-[8svh]">
           {/* Logo */}
-          <div className="flex justify-center items-center gap-[3svw]">
-            <h1 className="text-[min(10vw,3rem)] text-[#8CC63F] poppins-light">Lesstress</h1>
+          <div className="flex justify-center items-center gap-[4svw]">
+            <h1 className="text-[min(12vw,4rem)] text-[#8CC63F] poppins-light">Lesstress</h1>
             <Image
               src={lesstressIcon}
               alt="Lesstress"
-              className="w-[min(10vw,3.5rem)] h-[min(10vw,3.5rem)] object-contain"
+              className="w-[min(12vw,4.5rem)] h-[min(12vw,4.5rem)] object-contain"
             />
           </div>
 
