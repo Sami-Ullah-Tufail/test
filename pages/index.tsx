@@ -3,7 +3,7 @@ import Section from '@/components/section'
 import { detectIncognito } from "detectincognitojs";
 
 import elearningButton from '../public/KnopE-learningRood.svg';
-import lesstressIcon from '../public/Lesstress_icon.png';
+import lesstressIcon from '../public/logo.png';
 import measurementsButton from '../public/KnopMeasurementsGroen.svg';
 import practicalInfoButton from '../public/KnopPracticalInfoBlauw.png';
 import Image from 'next/image';
@@ -17,10 +17,31 @@ function getPlatformSpecificUrl(platform: 'ios' | 'android', type: 'measurements
     elearning: {
       ios: 'https://apps.apple.com/us/app/gnowbe-training-onboarding/id1104428352',
       android: 'https://play.google.com/store/apps/details?id=com.gnowbe.app',
+      deepLink: 'gnowbe://open',
+      iosFallback: 'itms-apps://itunes.apple.com/us/app/id1104428352?mt=8',
+      androidFallback: 'market://details?id=com.gnowbe.app'
     },
   };
+
+  if (type === 'elearning') {
+    // Try deep link first for elearning
+    try {
+      window.location.href = urls.elearning.deepLink;
+      // Set timeout for fallback
+      setTimeout(() => {
+        // If deep link fails, use fallback
+        window.location.href = platform === 'ios' ? urls.elearning.iosFallback : urls.elearning.androidFallback;
+      }, 1000);
+    } catch (e) {
+      // If deep link fails immediately, use fallback
+      window.location.href = platform === 'ios' ? urls.elearning.ios : urls.elearning.android;
+    }
+    return;
+  }
+
   return urls[type][platform];
 }
+
 const InstallPWAButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
@@ -134,7 +155,7 @@ const Index = () => {
     const isIOS = /iphone|ipad|ipod/.test(userAgent);
     const platform = isIOS ? 'ios' : 'android';
     const url = getPlatformSpecificUrl(platform, type);
-    window.location.href = url;
+    if (url) window.location.href = url;
   };
 
   return (
@@ -147,12 +168,11 @@ const Index = () => {
       <div className="flex min-h-[100svh] flex-col items-center justify-start p-[4svh] overflow-hidden mt-8">
         <div className="w-full max-w-[90vw] md:max-w-[80vw] flex flex-col items-center gap-[8svh]">
           {/* Logo */}
-          <div className="flex justify-center items-center gap-[4svw]">
-            <h1 className="text-[min(12vw,4rem)] text-[#8CC63F] poppins-light">Lesstress</h1>
+          <div className="flex flex-col items-center mt-10">
             <Image
               src={lesstressIcon}
               alt="Lesstress"
-              className="w-[min(12vw,4.5rem)] h-[min(12vw,4.5rem)] object-contain"
+              className="w-[80%] h-full object-contain"
             />
           </div>
 
