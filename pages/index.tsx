@@ -13,6 +13,9 @@ function getPlatformSpecificUrl(platform: 'ios' | 'android', type: 'measurements
     measurements: {
       ios: 'https://apps.apple.com/fi/app/kubios-hrv-daily-readiness/id1463040412',
       android: 'https://play.google.com/store/apps/details?id=com.kubioshrvapp',
+      deepLink: 'kubioshrv://',
+      iosFallback: 'itms-apps://itunes.apple.com/fi/app/id1463040412',
+      androidFallback: 'market://details?id=com.kubioshrvapp'
     },
     elearning: {
       ios: 'https://apps.apple.com/us/app/gnowbe-training-onboarding/id1104428352',
@@ -23,18 +26,18 @@ function getPlatformSpecificUrl(platform: 'ios' | 'android', type: 'measurements
     },
   };
 
-  if (type === 'elearning') {
-    // Try deep link first for elearning
+  if (type === 'elearning' || type === 'measurements') {
+    // Try deep link first
     try {
-      window.location.href = urls.elearning.deepLink;
+      window.location.href = urls[type].deepLink;
       // Set timeout for fallback
       setTimeout(() => {
         // If deep link fails, use fallback
-        window.location.href = platform === 'ios' ? urls.elearning.iosFallback : urls.elearning.androidFallback;
+        window.location.href = platform === 'ios' ? urls[type].iosFallback : urls[type].androidFallback;
       }, 1000);
     } catch (e) {
       // If deep link fails immediately, use fallback
-      window.location.href = platform === 'ios' ? urls.elearning.ios : urls.elearning.android;
+      window.location.href = platform === 'ios' ? urls[type].ios : urls[type].android;
     }
     return;
   }
@@ -160,11 +163,11 @@ const Index = () => {
 
   return (
     <div>
-        <div className="absolute top-0 left-0 w-full bg-transparent">
+        {/* <div className="absolute top-0 left-0 w-full bg-transparent">
           <div className="max-w-7xl mx-auto px-4 py-3 flex justify-center">
             <InstallPWAButton />
           </div>
-        </div>
+        </div> */}
       <div className="flex min-h-[100svh] flex-col items-center justify-start p-[4svh] overflow-hidden mt-8">
         <div className="w-full max-w-[90vw] md:max-w-[80vw] flex flex-col items-center gap-[8svh]">
           {/* Logo */}
